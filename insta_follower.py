@@ -1,12 +1,14 @@
 import time
-
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 class InstaFollower:
     def __init__(self):
         self.driver = webdriver.Firefox()
+        self.wait = WebDriverWait(self.driver, 30)
 
     def login(self, user, pw):
         # url = "https://www.instagram.com/login/"
@@ -31,7 +33,9 @@ class InstaFollower:
 
         password_input.send_keys(Keys.TAB + Keys.TAB + Keys.ENTER)
 
-
+        # Don't save login
+        not_now_button = self.wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/section/main/div/div/div/div/button")))
+        not_now_button.click()
 
 
     def find_followers(self):
