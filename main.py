@@ -9,6 +9,6 @@ INSTAGRAM_PASSWORD = os.environ.get('INSTAGRAM_PASSWORD')
 TARGET_ACCOUNT = 'chefsteps'
 
 instaFollower = InstaFollower()
-instaFollower.login()
+instaFollower.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
 instaFollower.find_followers()
 instaFollower.follow()
