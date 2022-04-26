@@ -5,6 +5,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
+TARGET_ACCOUNT = 'chefsteps'
+INSTAGRAM_URL = "https://www.instagram.com/"
+MY_INSTAGRAM_ACCT = "rustleup2"
+
 class InstaFollower:
     def __init__(self):
         self.driver = webdriver.Firefox()
@@ -12,7 +16,7 @@ class InstaFollower:
 
     def login(self, user, pw):
         # url = "https://www.instagram.com/login/"
-        url = "https://www.instagram.com/rustleup2/"
+        url = INSTAGRAM_URL+MY_INSTAGRAM_ACCT
         self.driver.get(url)
 
         # Agree to essential cookies
@@ -21,17 +25,23 @@ class InstaFollower:
 
         time.sleep(10)
 
-        # Enter username
-        username_input = self.driver.find_element(By.NAME, "username")
-        username_input.click()
-        username_input.send_keys(user)
+        # Suddenly, the login screen changed and now requires a login button
+        # be pressed to enter credentials.
+        try:
+            # Enter username
+            username_input = self.driver.find_element(By.NAME, "username")
+        except "NoSuchElementException":
+            login_button = self.driver.find_element(By.LINK_TEXT, "Log in")
+            login_button.click()
+        else:
+            username_input.click()
+            username_input.send_keys(user)
 
-        # Enter password
-        password_input = self.driver.find_element(By.NAME, "password")
-        password_input.click()
-        password_input.send_keys(pw)
-
-        password_input.send_keys(Keys.TAB + Keys.TAB + Keys.ENTER)
+            # Enter password
+            password_input = self.driver.find_element(By.NAME, "password")
+            password_input.click()
+            password_input.send_keys(pw)
+            password_input.send_keys(Keys.TAB + Keys.TAB + Keys.ENTER)
 
         # Don't save login
         not_now_button = self.wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/section/main/div/div/div/div/button")))
@@ -39,7 +49,16 @@ class InstaFollower:
 
 
     def find_followers(self):
-        pass
+        # Load the target account
+        url = INSTAGRAM_URL+TARGET_ACCOUNT
+        self.driver.get(url)
+
+        time.sleep(15)
+
+        # Click the followers link
+        followers_link = self.driver.find_element(By.CSS_SELECTOR, "li.Y8-fY:nth-child(2) > a:nth-child(1) > div:nth-child(1)")
+        followers_link.click()
+
 
     def follow(self):
         pass
