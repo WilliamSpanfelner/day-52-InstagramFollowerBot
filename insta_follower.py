@@ -53,11 +53,20 @@ class InstaFollower:
         url = INSTAGRAM_URL+TARGET_ACCOUNT
         self.driver.get(url)
 
-        time.sleep(15)
-
         # Click the followers link
-        followers_link = self.driver.find_element(By.CSS_SELECTOR, "li.Y8-fY:nth-child(2) > a:nth-child(1) > div:nth-child(1)")
+        followers_link = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "li.Y8-fY:nth-child(2) > a:nth-child(1) > div:nth-child(1)")))
+        # followers_link = self.driver.find_element(By.CSS_SELECTOR, "li.Y8-fY:nth-child(2) > a:nth-child(1) > div:nth-child(1)")
         followers_link.click()
+
+        # Locate the followers pop-up
+        pop_up_followers = self.wait.until(EC.presence_of_element_located((By.XPATH, "/ html / body / div[6] / div / div / div / div[2]")))
+        # pop_up_followers = self.driver.find_element(By.XPATH, "/ html / body / div[6] / div / div / div / div[2]")
+
+        # Scroll down the list of followers
+        for _ in range(10):
+            self.driver.execute_script('arguments[0].scrollTop = arguments[0].offsetHeight', pop_up_followers)
+            time.sleep(2)
+
 
 
     def follow(self):
